@@ -3,20 +3,20 @@
 
 # --- !Ups
 
-create table proporsal (
-  id                        bigint auto_increment not null,
+create table proposal (
+  id                        bigint not null,
   title                     varchar(255),
-  proporsal                 varchar(1000),
+  proposal                  varchar(1000),
   type                      integer,
-  is_approved               tinyint(1) default 0,
+  is_approved               boolean,
   keywords                  varchar(255),
   speaker_id                bigint,
-  constraint ck_proporsal_type check (type in (0,1)),
-  constraint pk_proporsal primary key (id))
+  constraint ck_proposal_type check (type in (0,1)),
+  constraint pk_proposal primary key (id))
 ;
 
 create table speaker (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   name                      varchar(255),
   email                     varchar(255),
   bio                       varchar(1000),
@@ -25,18 +25,26 @@ create table speaker (
   constraint pk_speaker primary key (id))
 ;
 
-alter table proporsal add constraint fk_proporsal_speaker_1 foreign key (speaker_id) references speaker (id) on delete restrict on update restrict;
-create index ix_proporsal_speaker_1 on proporsal (speaker_id);
+create sequence proposal_seq;
+
+create sequence speaker_seq;
+
+alter table proposal add constraint fk_proposal_speaker_1 foreign key (speaker_id) references speaker (id) on delete restrict on update restrict;
+create index ix_proposal_speaker_1 on proposal (speaker_id);
 
 
 
 # --- !Downs
 
-SET FOREIGN_KEY_CHECKS=0;
+SET REFERENTIAL_INTEGRITY FALSE;
 
-drop table proporsal;
+drop table if exists proposal;
 
-drop table speaker;
+drop table if exists speaker;
 
-SET FOREIGN_KEY_CHECKS=1;
+SET REFERENTIAL_INTEGRITY TRUE;
+
+drop sequence if exists proposal_seq;
+
+drop sequence if exists speaker_seq;
 

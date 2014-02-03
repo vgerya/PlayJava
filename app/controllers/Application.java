@@ -1,14 +1,14 @@
 package controllers;
 
-import models.Proporsal;
-import play.data.Form;
+import models.*;
+import play.data.*;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Results;
 import views.html.index;
 
 public class Application extends Controller {
-    final static Form<Proporsal> proporsalForm = Form.form(Proporsal.class);
+    final static Form<Proposal> proposalForm = Form.form(Proposal.class);
 
     public static Result index() {
         return ok(index.render("Your new application is ready."));
@@ -16,22 +16,22 @@ public class Application extends Controller {
 
     public static Result newProposal() {
 
-        return ok(views.html.newProposal.render(proporsalForm));
+        return ok(views.html.newProposal.render(proposalForm));
     }
 
     public static Result submitProposal() {
-        Form<Proporsal> submittedForm = proporsalForm.bindFromRequest();
+        Form<Proposal> submittedForm = proposalForm.bindFromRequest();
         if(submittedForm.hasErrors()) {
-            ok(views.html.newProposal.render(submittedForm));
+            return ok(views.html.newProposal.render(submittedForm));
         }else {
-            Proporsal proporsal = submittedForm.get();
-            proporsal.save();
+            Proposal proposal = submittedForm.get();
+            proposal.save();
 
             flash("message", "Thanks for submitting the proposal.");
             return redirect(routes.Application.index());
         }
 
-        return Results.TODO;
+//        return Results.TODO;
     }
 
 }
